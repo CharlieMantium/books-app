@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components/macro';
 import { rem } from 'polished';
+import map from 'lodash/map';
+
+import { Book } from '../../types/books';
 
 import Layout from '../../styles/Layout/Layout';
 import SearchForm from '../SearchForm/SearchForm';
@@ -13,6 +16,27 @@ const StyledHeader = styled.h1`
 
 const App: React.FC = () => {
   const [title, setTitle] = useState<string>('');
+  const [books, setBooks] = useState<Book[]>([]);
+
+  useEffect(() => {
+    const fetchBooks = async (searchedTitle: string): Promise<void> => {
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchedTitle}`,
+      );
+      const data = await response.json();
+      console.log(data);
+      const mappedBooks = map(data.items, (book) => ({
+        title: book?.volumeInfo?.title || 'no data',
+        cover: book?.volumeInfo?.imageLinks?.smallThumbnail || 'no data',
+        description: book?.searchInfo?.textSnippet || 'no data',
+      }));
+      setBooks(mappedBooks);
+    };
+    if (title.length) fetchBooks(title);
+  }, [title]);
+
+  console.log(books);
+
   return (
     <Layout>
       <StyledHeader>Book App</StyledHeader>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 interface SearchFormProps {
   title: string;
@@ -6,12 +6,20 @@ interface SearchFormProps {
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({ title, setTitle }) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
+  const [titleInputValue, setTitleInputValue] = useState<string>('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setTitleInputValue(e.target.value);
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setTitle(titleInputValue);
+  };
+
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label>
         Title
-        <input type="text" value={title} onChange={handleChange} />
+        <input type="text" value={titleInputValue} onChange={handleChange} />
       </label>
       <input type="submit" value="Search" />
     </form>

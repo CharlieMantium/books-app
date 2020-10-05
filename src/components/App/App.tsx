@@ -21,13 +21,13 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchBooks = async (searchedTitle: string): Promise<void> => {
       const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchedTitle}`,
+        `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchedTitle}&maxResults=40`,
       );
       const data = await response.json();
       const mappedBooks = map(data.items, (book) => ({
-        title: book?.volumeInfo?.title || 'no data',
-        cover: book?.volumeInfo?.imageLinks?.smallThumbnail || 'no data',
-        description: book?.searchInfo?.textSnippet || 'no data',
+        title: book?.volumeInfo?.title,
+        cover: book?.volumeInfo?.imageLinks?.smallThumbnail,
+        description: book?.searchInfo?.textSnippet,
       }));
       setBooks(mappedBooks);
     };

@@ -4,9 +4,9 @@ import map from 'lodash/map';
 
 import { Book } from '../../types/books';
 
-const BookListWrapper = styled.ul``;
+import BookListItem from '../BookListItem/BookListItem';
 
-const BookListItem = styled.li``;
+const BookListWrapper = styled.ul``;
 
 interface BookListProps {
   books: Book[];
@@ -15,11 +15,7 @@ interface BookListProps {
 const BookList: React.FC<BookListProps> = ({ books }) => (
   <BookListWrapper>
     {map(books, (book) => (
-      <BookListItem>
-        <img src={book.cover} alt={`${book.title} books cover.`} />
-        Title: {book.title}
-        <p>{book.description}</p>
-      </BookListItem>
+      <BookListItem bookData={book} />
     ))}
   </BookListWrapper>
 );

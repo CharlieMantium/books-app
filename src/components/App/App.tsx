@@ -24,7 +24,6 @@ const App: React.FC = () => {
         `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchedTitle}`,
       );
       const data = await response.json();
-      console.log(data);
       const mappedBooks = map(data.items, (book) => ({
         title: book?.volumeInfo?.title || 'no data',
         cover: book?.volumeInfo?.imageLinks?.smallThumbnail || 'no data',
@@ -35,13 +34,11 @@ const App: React.FC = () => {
     if (title.length) fetchBooks(title);
   }, [title]);
 
-  console.log(books);
-
   return (
     <Layout>
       <StyledHeader>Book App</StyledHeader>
       <SearchForm title={title} setTitle={setTitle} />
-      <BookList />
+      <BookList books={books} />
     </Layout>
   );
 };

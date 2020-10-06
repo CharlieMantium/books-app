@@ -11,6 +11,8 @@ import BookList from '../BookList/BookList';
 
 const StyledHeader = styled.h1`
   margin: ${rem(10)} 0;
+  width: 100%;
+  font-family: 'Great Vibes', cursive;
   text-align: center;
 `;
 

@@ -7,6 +7,7 @@ export const colors = {
 };
 
 export const screenSizes = {
+  rotatedMobile: '500px',
   largeMobile: '760px',
   desktop: '992px',
 };

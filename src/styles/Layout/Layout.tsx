@@ -1,8 +1,9 @@
 import React from 'react';
 import styled, { createGlobalStyle } from 'styled-components/macro';
 import { Normalize } from 'styled-normalize';
+import { rem } from 'polished';
 
-import { colors } from '../base';
+import { colors, screenSizes } from '../base';
 
 const GlobalStyle = createGlobalStyle`
 
@@ -25,6 +26,22 @@ const GlobalStyle = createGlobalStyle`
 const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  padding: ${rem(20)};
+  width: 100%;
+
+  @media (min-width: ${screenSizes.rotatedMobile}) {
+    padding: ${rem(20)} ${rem(50)};
+  }
+
+  @media (min-width: ${screenSizes.largeMobile}) {
+    padding: ${rem(50)} ${rem(100)};
+    font-size: 1.5rem;
+  }
+
+  @media (min-width: ${screenSizes.desktop}) {
+    padding: ${rem(50)} ${rem(100)};
+    font-size: 2rem;
+  }
 `;
 
 const Layout: React.FC = ({ children }) => (

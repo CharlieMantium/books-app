@@ -15,7 +15,7 @@ interface BookListProps {
 const BookList: React.FC<BookListProps> = ({ books }) => (
   <BookListWrapper>
     {map(books, (book) => (
-      <BookListItem bookData={book} />
+      <BookListItem key={book.id} bookData={book} />
     ))}
   </BookListWrapper>
 );

@@ -23,16 +23,25 @@ const StyledHeader = styled.h1`
 
 const App: React.FC = () => {
   const [title, setTitle] = useState<string>('');
+  const [author, setAuthor] = useState<string>('');
+  const [language, setLanguage] = useState<string>('');
+  const [year, setYear] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
-    if (title) fetchBooks(title, setBooks);
+    if (title) fetchBooks(title, author, language, year, setBooks);
   }, [title]);
 
   return (
     <Layout>
       <StyledHeader>Book App</StyledHeader>
-      <SearchForm title={title} setTitle={setTitle} />
+      <SearchForm
+        title={title}
+        setTitle={setTitle}
+        setAuthor={setAuthor}
+        setLanguage={setLanguage}
+        setYear={setYear}
+      />
       <BookList books={books} />
     </Layout>
   );

@@ -6,7 +6,16 @@ import { Book } from '../../types/books';
 
 import BookListItem from '../BookListItem/BookListItem';
 
-const BookListWrapper = styled.ul``;
+const BookListWrapper = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+`;
 
 interface BookListProps {
   books: Book[];

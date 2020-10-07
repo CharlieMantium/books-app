@@ -34,13 +34,11 @@ const StyledWrapper = styled.div`
   }
 
   @media (min-width: ${screenSizes.largeMobile}) {
-    padding: ${rem(50)} ${rem(100)};
-    font-size: 1.5rem;
+    padding: ${rem(30)} ${rem(30)};
   }
 
   @media (min-width: ${screenSizes.desktop}) {
     padding: ${rem(50)} ${rem(100)};
-    font-size: 2rem;
   }
 `;
 

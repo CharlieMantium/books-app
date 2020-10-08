@@ -4,45 +4,46 @@ import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
 
+import FormTextInput from '../FormTextInput/FormTextInput';
+
 const StyledForm = styled.form`
+  width: 100%;
+  padding: 0;
+
+  @media (min-width: ${screenSizes.desktop}) {
+    padding: 0 ${rem(200)};
+  }
+`;
+
+const StyledSearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
+  position: ${({ isVisible, isAdvancedPanel }) =>
+    !isVisible && isAdvancedPanel ? 'absolute' : 'static'};
+  top: ${({ isVisible, isAdvancedPanel }) => !isVisible && !isAdvancedPanel && `${rem(100)}`};
+  z-index: ${({ isAdvancedPanel }) => isAdvancedPanel && '-1'};
+  display: flex;
+  opacity: ${({ isVisible }) => (isVisible ? '1' : '0')};
+  transform: ${({ isVisible, isAdvancedPanel }) =>
+    !isVisible && isAdvancedPanel && `translateY(-${rem(100)})`};
+  border: none;
+  margin: 0;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+`;
+
+const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  width: 100%;
-
-  @media (min-width: ${screenSizes.rotatedMobile}) {
-    justify-content: space-around;
-  }
-
-  @media (min-width: ${screenSizes.largeMobile}) {
-    margin: ${rem(30)} 0;
-  }
+  margin-top: ${rem(10)};
 `;
 
-const StyledTextInput = styled.input`
+const StyledButton = styled.button`
   padding: ${rem(1)} ${rem(10)};
-  width: 70%;
+  width: 40%;
+  max-width: ${rem(100)};
   border: ${rem(2)} solid ${colors.beta};
   border-radius: ${rem(10)};
   color: ${colors.alpha};
   background-color: ${colors.gamma};
-  transition: background-color 0.5s ease-in-out;
-
-  &::-webkit-input-placeholder {
-    color: ${colors.alpha};
-    opacity: 0.5;
-  }
-
-  &:hover {
-    background-color: ${lighten(0.1, colors.gamma)};
-  }
-`;
-
-const StyledSubmitInput = styled.input`
-  padding: ${rem(1)} ${rem(10)};
-  border: ${rem(2)} solid ${colors.beta};
-  border-radius: ${rem(10)};
-  color: ${colors.alpha};
-  background-color: ${colors.gamma};
+  cursor: pointer;
   transition: color 0.5s ease-in-out, background-color 0.5s ease-in-out;
 
   &:hover {
@@ -54,27 +55,77 @@ const StyledSubmitInput = styled.input`
 interface SearchFormProps {
   title: string;
   setTitle: (title: string) => void;
+  setAuthor: (title: string) => void;
+  setLanguage: (title: string) => void;
+  setYear: (title: string) => void;
 }
 
-const SearchForm: React.FC<SearchFormProps> = ({ title, setTitle }) => {
+const SearchForm: React.FC<SearchFormProps> = ({
+  title,
+  setTitle,
+  setAuthor,
+  setLanguage,
+  setYear,
+}) => {
+  const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [titleInputValue, setTitleInputValue] = useState<string>('');
+  const [authorInputValue, setAuthorInputValue] = useState<string>('');
+  const [languageInputValue, setLanguageInputValue] = useState<string>('');
+  const [yearInputValue, setYearInputValue] = useState<string>('');
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const onAdvancedSearchButtonClick = () => setIsAdvancedSearch((state) => !state);
+  const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTitleInputValue(e.target.value);
+  const handleAuthorInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAuthorInputValue(e.target.value);
+  const handleLanguageInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setLanguageInputValue(e.target.value);
+  const handleYearInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setYearInputValue(e.target.value);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setTitle(titleInputValue);
+    setAuthor(authorInputValue);
+    setLanguage(languageInputValue.toLowerCase());
+    setYear(yearInputValue);
   };
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledTextInput
-        type="text"
-        value={titleInputValue}
-        onChange={handleChange}
-        placeholder="Book title..."
-      />
-      <StyledSubmitInput type="submit" value="Search" />
+      <StyledSearchPanel isVisible={true} isAdvancedPanel={false}>
+        <FormTextInput
+          name="title"
+          value={titleInputValue}
+          onChange={handleTitleInputChange}
+          placeholder="Searched title"
+        />
+        <ButtonWrapper>
+          <StyledButton type="button" onClick={onAdvancedSearchButtonClick}>
+            Advanced
+          </StyledButton>
+          <StyledButton type="submit">Search</StyledButton>
+        </ButtonWrapper>
+      </StyledSearchPanel>
+      <StyledSearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
+        <FormTextInput
+          name="author"
+          value={authorInputValue}
+          onChange={handleAuthorInputChange}
+          placeholder="Searched author"
+        />
+        <FormTextInput
+          name="language"
+          value={languageInputValue}
+          onChange={handleLanguageInputChange}
+          placeholder="Country code e.g. en, pl, fr"
+        />
+        <FormTextInput
+          name="year"
+          value={yearInputValue}
+          onChange={handleYearInputChange}
+          placeholder="Year of pubishment"
+        />
+      </StyledSearchPanel>
     </StyledForm>
   );
 };

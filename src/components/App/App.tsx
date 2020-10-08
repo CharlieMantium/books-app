@@ -30,7 +30,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     if (title) fetchBooks(title, author, language, year, setBooks);
-  }, [title]);
+  }, [title, author, language, year]);
 
   return (
     <Layout>

@@ -15,10 +15,18 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledSearchPanel = styled.fieldset`
+const StyledSearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
+  position: ${({ isVisible, isAdvancedPanel }) =>
+    !isVisible && isAdvancedPanel ? 'absolute' : 'static'};
+  top: ${({ isVisible, isAdvancedPanel }) => !isVisible && !isAdvancedPanel && `${rem(100)}`};
+  z-index: ${({ isAdvancedPanel }) => isAdvancedPanel && '-1'};
   display: flex;
+  opacity: ${({ isVisible }) => (isVisible ? '1' : '0')};
+  transform: ${({ isVisible, isAdvancedPanel }) =>
+    !isVisible && isAdvancedPanel && `translateY(-${rem(100)})`};
   border: none;
   margin: 0;
+  transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 `;
 
 const ButtonWrapper = styled.div`
@@ -78,34 +86,28 @@ const SearchForm: React.FC<SearchFormProps> = ({
     e.preventDefault();
     setTitle(titleInputValue);
     setAuthor(authorInputValue);
-    setLanguage(languageInputValue);
+    setLanguage(languageInputValue.toLowerCase());
     setYear(yearInputValue);
   };
 
   return (
     <StyledForm onSubmit={handleSubmit}>
-      <StyledSearchPanel>
+      <StyledSearchPanel isVisible={true} isAdvancedPanel={false}>
         <FormTextInput name="title" value={titleInputValue} onChange={handleTitleInputChange} />
         <ButtonWrapper>
           <StyledButton onClick={onAdvancedSearchButtonClick}>Advanced</StyledButton>
           <StyledButton type="submit">Search</StyledButton>
         </ButtonWrapper>
       </StyledSearchPanel>
-      {isAdvancedSearch && (
-        <StyledSearchPanel>
-          <FormTextInput
-            name="author"
-            value={authorInputValue}
-            onChange={handleAuthorInputChange}
-          />
-          <FormTextInput
-            name="language"
-            value={languageInputValue}
-            onChange={handleLanguageInputChange}
-          />
-          <FormTextInput name="year" value={yearInputValue} onChange={handleYearInputChange} />
-        </StyledSearchPanel>
-      )}
+      <StyledSearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
+        <FormTextInput name="author" value={authorInputValue} onChange={handleAuthorInputChange} />
+        <FormTextInput
+          name="language"
+          value={languageInputValue}
+          onChange={handleLanguageInputChange}
+        />
+        <FormTextInput name="year" value={yearInputValue} onChange={handleYearInputChange} />
+      </StyledSearchPanel>
     </StyledForm>
   );
 };

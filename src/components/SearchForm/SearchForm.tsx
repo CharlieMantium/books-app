@@ -93,20 +93,38 @@ const SearchForm: React.FC<SearchFormProps> = ({
   return (
     <StyledForm onSubmit={handleSubmit}>
       <StyledSearchPanel isVisible={true} isAdvancedPanel={false}>
-        <FormTextInput name="title" value={titleInputValue} onChange={handleTitleInputChange} />
+        <FormTextInput
+          name="title"
+          value={titleInputValue}
+          onChange={handleTitleInputChange}
+          placeholder="Searched title"
+        />
         <ButtonWrapper>
-          <StyledButton onClick={onAdvancedSearchButtonClick}>Advanced</StyledButton>
+          <StyledButton type="button" onClick={onAdvancedSearchButtonClick}>
+            Advanced
+          </StyledButton>
           <StyledButton type="submit">Search</StyledButton>
         </ButtonWrapper>
       </StyledSearchPanel>
       <StyledSearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
-        <FormTextInput name="author" value={authorInputValue} onChange={handleAuthorInputChange} />
+        <FormTextInput
+          name="author"
+          value={authorInputValue}
+          onChange={handleAuthorInputChange}
+          placeholder="Searched author"
+        />
         <FormTextInput
           name="language"
           value={languageInputValue}
           onChange={handleLanguageInputChange}
+          placeholder="Country code e.g. en, pl, fr"
         />
-        <FormTextInput name="year" value={yearInputValue} onChange={handleYearInputChange} />
+        <FormTextInput
+          name="year"
+          value={yearInputValue}
+          onChange={handleYearInputChange}
+          placeholder="Year of pubishment"
+        />
       </StyledSearchPanel>
     </StyledForm>
   );

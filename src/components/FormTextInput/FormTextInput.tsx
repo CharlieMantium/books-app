@@ -7,6 +7,7 @@ import { colors, screenSizes } from '../../styles/base';
 const StyledLabel = styled.label`
   display: flex;
   justify-content: space-between;
+  align-items: center;
   width: 100%;
 
   @media (min-width: ${screenSizes.largeMobile}) {
@@ -37,12 +38,13 @@ interface FormTextInputProps {
   name: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
 }
 
-const FormTextInput: React.FC<FormTextInputProps> = ({ name, value, onChange }) => (
+const FormTextInput: React.FC<FormTextInputProps> = ({ name, value, onChange, placeholder }) => (
   <StyledLabel>
     <InputName>{name}</InputName>
-    <StyledTextInput type="text" value={value} onChange={onChange} />
+    <StyledTextInput type="text" value={value} onChange={onChange} placeholder={placeholder} />
   </StyledLabel>
 );
 

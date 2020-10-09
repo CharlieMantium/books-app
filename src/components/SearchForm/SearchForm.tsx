@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
+import { Book } from '../../types/types';
+import { fetchBooks } from '../../helpers/fetch';
 
 import FormTextInput from '../FormTextInput/FormTextInput';
 
-const StyledForm = styled.form`
+const Form = styled.form`
   width: 100%;
   padding: 0;
 
@@ -15,17 +17,16 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledSearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
-  position: ${({ isVisible, isAdvancedPanel }) =>
-    !isVisible && isAdvancedPanel ? 'absolute' : 'static'};
+const SearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
+  position: ${({ isVisible, isAdvancedPanel }) => !isVisible && isAdvancedPanel && 'absolute'};
   top: ${({ isVisible, isAdvancedPanel }) => !isVisible && !isAdvancedPanel && `${rem(100)}`};
   z-index: ${({ isAdvancedPanel }) => isAdvancedPanel && '-1'};
   display: flex;
+  margin: 0;
   opacity: ${({ isVisible }) => (isVisible ? '1' : '0')};
+  border: none;
   transform: ${({ isVisible, isAdvancedPanel }) =>
     !isVisible && isAdvancedPanel && `translateY(-${rem(100)})`};
-  border: none;
-  margin: 0;
   transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 `;
 
@@ -35,7 +36,7 @@ const ButtonWrapper = styled.div`
   margin-top: ${rem(10)};
 `;
 
-const StyledButton = styled.button`
+const Button = styled.button`
   padding: ${rem(1)} ${rem(10)};
   width: 40%;
   max-width: ${rem(100)};
@@ -53,46 +54,74 @@ const StyledButton = styled.button`
 `;
 
 interface SearchFormProps {
-  title: string;
-  setTitle: (title: string) => void;
-  setAuthor: (title: string) => void;
-  setLanguage: (title: string) => void;
-  setYear: (title: string) => void;
+  setBooks: (books: Book[] | { (prevState: Book[]): Book[] }) => void;
+  setIsMoreData: (isThereMoreData: boolean) => void;
+  loadedPage: number;
+  setLoadedPage: (page: number) => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
-  title,
-  setTitle,
-  setAuthor,
-  setLanguage,
-  setYear,
+  setBooks,
+  setIsMoreData,
+  loadedPage,
+  setLoadedPage,
 }) => {
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
+
+  const [title, setTitle] = useState<string>('');
+  const [author, setAuthor] = useState<string>('');
+  const [language, setLanguage] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+
   const [titleInputValue, setTitleInputValue] = useState<string>('');
   const [authorInputValue, setAuthorInputValue] = useState<string>('');
   const [languageInputValue, setLanguageInputValue] = useState<string>('');
-  const [yearInputValue, setYearInputValue] = useState<string>('');
+  const [categoryInputValue, setCategoryInputValue] = useState<string>('');
 
   const onAdvancedSearchButtonClick = () => setIsAdvancedSearch((state) => !state);
+
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTitleInputValue(e.target.value);
   const handleAuthorInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setAuthorInputValue(e.target.value);
   const handleLanguageInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setLanguageInputValue(e.target.value);
-  const handleYearInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setYearInputValue(e.target.value);
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setTitle(titleInputValue);
-    setAuthor(authorInputValue);
-    setLanguage(languageInputValue.toLowerCase());
-    setYear(yearInputValue);
+  const handleCategoryInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setCategoryInputValue(e.target.value);
+
+  const resetSearch = () => {
+    setTitle('');
+    setAuthor('');
+    setLanguage('');
+    setBooks([]);
+    setLoadedPage(0);
+    setIsMoreData(true);
   };
 
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (
+      title !== titleInputValue ||
+      author !== authorInputValue ||
+      language !== languageInputValue.toLowerCase() ||
+      category !== categoryInputValue
+    ) {
+      resetSearch();
+      setTitle(titleInputValue);
+      setAuthor(authorInputValue);
+      setLanguage(languageInputValue.toLowerCase());
+      setCategory(categoryInputValue);
+    }
+  };
+
+  useEffect(() => {
+    if (title || author || language || category)
+      fetchBooks(title, author, language, category, loadedPage, setBooks, setIsMoreData);
+  }, [title, author, language, category, loadedPage, setBooks, setIsMoreData]);
+
   return (
-    <StyledForm onSubmit={handleSubmit}>
-      <StyledSearchPanel isVisible={true} isAdvancedPanel={false}>
+    <Form onSubmit={handleSubmit}>
+      <SearchPanel isVisible={true} isAdvancedPanel={false}>
         <FormTextInput
           name="title"
           value={titleInputValue}
@@ -100,13 +129,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
           placeholder="Searched title"
         />
         <ButtonWrapper>
-          <StyledButton type="button" onClick={onAdvancedSearchButtonClick}>
+          <Button type="button" onClick={onAdvancedSearchButtonClick}>
             Advanced
-          </StyledButton>
-          <StyledButton type="submit">Search</StyledButton>
+          </Button>
+          <Button type="submit">Search</Button>
         </ButtonWrapper>
-      </StyledSearchPanel>
-      <StyledSearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
+      </SearchPanel>
+      <SearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
         <FormTextInput
           name="author"
           value={authorInputValue}
@@ -120,13 +149,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
           placeholder="Country code e.g. en, pl, fr"
         />
         <FormTextInput
-          name="year"
-          value={yearInputValue}
-          onChange={handleYearInputChange}
-          placeholder="Year of pubishment"
+          name="category"
+          value={categoryInputValue}
+          onChange={handleCategoryInputChange}
+          placeholder="Searched category"
         />
-      </StyledSearchPanel>
-    </StyledForm>
+      </SearchPanel>
+    </Form>
   );
 };
 

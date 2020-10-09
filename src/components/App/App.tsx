@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components/macro';
 import { rem } from 'polished';
 
 import { screenSizes } from '../../styles/base';
-import { Book } from '../../types/books';
-import { fetchBooks } from '../../helpers/fetch';
+import { Book } from '../../types/types';
 
 import Layout from '../../styles/Layout/Layout';
 import SearchForm from '../SearchForm/SearchForm';
 import BookList from '../BookList/BookList';
 
-const StyledHeader = styled.h1`
+const Header = styled.h1`
   margin: ${rem(10)} 0;
   width: 100%;
   font-family: 'Great Vibes', cursive;
@@ -22,27 +21,22 @@ const StyledHeader = styled.h1`
 `;
 
 const App: React.FC = () => {
-  const [title, setTitle] = useState<string>('');
-  const [author, setAuthor] = useState<string>('');
-  const [language, setLanguage] = useState<string>('');
-  const [year, setYear] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
+  const [loadedPage, setLoadedPage] = useState<number>(0);
+  const [isMoreData, setIsMoreData] = useState<boolean>(true);
 
-  useEffect(() => {
-    if (title) fetchBooks(title, author, language, year, setBooks);
-  }, [title, author, language, year]);
+  const incrementPageNumber = () => setLoadedPage((state) => state + 1);
 
   return (
     <Layout>
-      <StyledHeader>Book App</StyledHeader>
+      <Header>Book App</Header>
       <SearchForm
-        title={title}
-        setTitle={setTitle}
-        setAuthor={setAuthor}
-        setLanguage={setLanguage}
-        setYear={setYear}
+        setBooks={setBooks}
+        setIsMoreData={setIsMoreData}
+        loadedPage={loadedPage}
+        setLoadedPage={setLoadedPage}
       />
-      <BookList books={books} />
+      <BookList books={books} incrementPageNumber={incrementPageNumber} isMoreData={isMoreData} />
     </Layout>
   );
 };

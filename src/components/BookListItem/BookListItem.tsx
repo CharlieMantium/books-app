@@ -3,7 +3,7 @@ import styled from 'styled-components/macro';
 import { rem } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
-import { Book } from '../../types/books';
+import { Book } from '../../types/types';
 
 const BookListItemWrapper = styled.li`
   display: flex;
@@ -47,11 +47,9 @@ const BookTitle = styled.h2`
   color: ${colors.gamma};
 `;
 
-const BookDescription = styled.p<{
-  isDescription: boolean;
-}>`
+const BookDescription = styled.p`
   margin: 0;
-  text-align: ${({ isDescription }) => isDescription && 'center'};
+  text-align: center;
   word-wrap: break-word;
 `;
 
@@ -74,15 +72,12 @@ const BookListItem: React.FC<BookListItemProps> = ({ bookData }) => (
     <BookListItemContentWrapper>
       <BookTitle>{bookData.title}</BookTitle>
       <CoverWrapper>
-        <StyledImg src={bookData.cover} alt={`"${bookData.title}" books cover.`} />
+        <StyledImg src={bookData.cover} alt={`"${bookData.title}" book cover`} />
       </CoverWrapper>
       {bookData.description ? (
-        <BookDescription
-          isDescription={false}
-          dangerouslySetInnerHTML={{ __html: bookData.description }}
-        />
+        <BookDescription dangerouslySetInnerHTML={{ __html: bookData.description }} />
       ) : (
-        <BookDescription isDescription>No description</BookDescription>
+        <BookDescription>No description</BookDescription>
       )}
     </BookListItemContentWrapper>
   </BookListItemWrapper>

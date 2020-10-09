@@ -1,3 +1,8 @@
+import includes from 'lodash/includes';
+import map from 'lodash/map';
+
+import { Book } from '../types/books';
+
 export const createUrlResources = (
   title: string,
   author: string,
@@ -12,4 +17,9 @@ export const createUrlResources = (
   const dataPageString = `&startIndex=${loadedPage * 10}`;
 
   return `volumes?q=${titleSearchString}${categorySearchString}${authorSearchString}${languageSearchString}${dataPageString}&maxResults=10`;
+};
+
+export const filterOutDuplicateBooks = (currentBooks: Book[], newBooks: Book[]): Book[] => {
+  const currentBooksID = map(currentBooks, (currentBook: Book) => currentBook.id);
+  return newBooks.filter((newBook) => !includes(currentBooksID, newBook.id));
 };

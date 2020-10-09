@@ -1,7 +1,7 @@
 import map from 'lodash/map';
 
 import { Book } from '../types/books';
-import { createUrlResources } from './helpers';
+import { createUrlResources, filterOutDuplicateBooks } from './helpers';
 
 export const fetchBooks = async (
   title: string,
@@ -27,6 +27,6 @@ export const fetchBooks = async (
   }));
 
   if (mappedBooks.length) {
-    setBooks((prevState) => [...prevState, ...mappedBooks]);
+    setBooks((prevState) => [...prevState, ...filterOutDuplicateBooks(prevState, mappedBooks)]);
   } else setIsMoreData(false);
 };

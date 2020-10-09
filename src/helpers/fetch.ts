@@ -1,27 +1,32 @@
 import map from 'lodash/map';
-import filter from 'lodash/filter';
 
 import { Book } from '../types/books';
+import { createUrlResources } from './helpers';
 
 export const fetchBooks = async (
-  searchedTitle: string,
+  title: string,
   author: string,
   language: string,
-  year: string,
-  setBooks: (books: Book[]) => void,
+  category: string,
+  loadedPage: number,
+  setBooks: (books: Book[] | { (prevState: Book[]): Book[] }) => void,
+  setIsMoreData: (isThereMoreData: boolean) => void,
 ): Promise<void> => {
-  const authorSearchString = author.length ? `+inauthor:${author}` : '';
-  const languageSearchString = language.length ? `&langRestrict=${language}` : '';
-  const url = `https://www.googleapis.com/books/v1/volumes?q=intitle:${searchedTitle}${authorSearchString}${languageSearchString}&maxResults=40`;
+  const urlEntryPoint = 'https://www.googleapis.com/books/v1/';
+  const urlResources = createUrlResources(title, author, language, category, loadedPage);
+  const url = `${urlEntryPoint}${urlResources}`;
   const response = await fetch(url);
   const data = await response.json();
+  console.log(url);
+  console.log(data);
   const mappedBooks = map(data.items, (book) => ({
     cover: book?.volumeInfo?.imageLinks?.smallThumbnail,
     description: book?.searchInfo?.textSnippet,
     id: book?.id,
     title: book?.volumeInfo?.title,
-    year: book?.volumeInfo?.publishedDate?.substring(0, 4),
   }));
-  const filteredBooks = year ? filter(mappedBooks, { year }) : mappedBooks;
-  setBooks(filteredBooks);
+
+  if (mappedBooks.length) {
+    setBooks((prevState) => [...prevState, ...mappedBooks]);
+  } else setIsMoreData(false);
 };

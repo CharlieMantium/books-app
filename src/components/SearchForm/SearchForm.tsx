@@ -3,6 +3,7 @@ import styled from 'styled-components/macro';
 import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
+import { Book } from '../../types/books';
 
 import FormTextInput from '../FormTextInput/FormTextInput';
 
@@ -53,25 +54,28 @@ const StyledButton = styled.button`
 `;
 
 interface SearchFormProps {
-  title: string;
   setTitle: (title: string) => void;
-  setAuthor: (title: string) => void;
-  setLanguage: (title: string) => void;
-  setYear: (title: string) => void;
+  setAuthor: (author: string) => void;
+  setLanguage: (language: string) => void;
+  setCategory: (category: string) => void;
+  setBooks: (books: Book[]) => void;
+  setLoadedPage: (page: number) => void;
+  setIsMoreData: (isMoreDataToLoad: boolean) => void;
+  resetSearch: () => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
-  title,
+  resetSearch,
   setTitle,
   setAuthor,
   setLanguage,
-  setYear,
+  setCategory,
 }) => {
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [titleInputValue, setTitleInputValue] = useState<string>('');
   const [authorInputValue, setAuthorInputValue] = useState<string>('');
   const [languageInputValue, setLanguageInputValue] = useState<string>('');
-  const [yearInputValue, setYearInputValue] = useState<string>('');
+  const [categoryInputValue, setCategoryInputValue] = useState<string>('');
 
   const onAdvancedSearchButtonClick = () => setIsAdvancedSearch((state) => !state);
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -80,14 +84,15 @@ const SearchForm: React.FC<SearchFormProps> = ({
     setAuthorInputValue(e.target.value);
   const handleLanguageInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setLanguageInputValue(e.target.value);
-  const handleYearInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    setYearInputValue(e.target.value);
+  const handleCategoryInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setCategoryInputValue(e.target.value);
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    resetSearch();
     setTitle(titleInputValue);
     setAuthor(authorInputValue);
     setLanguage(languageInputValue.toLowerCase());
-    setYear(yearInputValue);
+    setCategory(categoryInputValue);
   };
 
   return (
@@ -120,10 +125,10 @@ const SearchForm: React.FC<SearchFormProps> = ({
           placeholder="Country code e.g. en, pl, fr"
         />
         <FormTextInput
-          name="year"
-          value={yearInputValue}
-          onChange={handleYearInputChange}
-          placeholder="Year of pubishment"
+          name="category"
+          value={categoryInputValue}
+          onChange={handleCategoryInputChange}
+          placeholder="Searched category"
         />
       </StyledSearchPanel>
     </StyledForm>

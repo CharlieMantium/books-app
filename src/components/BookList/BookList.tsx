@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components/macro';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import map from 'lodash/map';
 
 import { Book } from '../../types/books';
 
 import BookListItem from '../BookListItem/BookListItem';
+import Loader from '../Loader/Loader';
 
 const BookListWrapper = styled.ul`
   display: flex;
@@ -17,15 +19,37 @@ const BookListWrapper = styled.ul`
   list-style-type: none;
 `;
 
+const StyledInfiniteScroll = styled(InfiniteScroll)`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+`;
+
+const InfiniteScrollMessage = styled.p`
+  /* width: 100%; */
+  text-align: center;
+`;
+
 interface BookListProps {
   books: Book[];
+  incrementPageNumber: () => void;
+  isMoreData: boolean;
 }
 
-const BookList: React.FC<BookListProps> = ({ books }) => (
+const BookList: React.FC<BookListProps> = ({ books, incrementPageNumber, isMoreData }) => (
   <BookListWrapper>
-    {map(books, (book) => (
-      <BookListItem key={book.id} bookData={book} />
-    ))}
+    <StyledInfiniteScroll
+      dataLength={books.length}
+      next={incrementPageNumber}
+      hasMore={isMoreData}
+      loader={<Loader />}
+      endMessage={<InfiniteScrollMessage>That's all Folks!</InfiniteScrollMessage>}
+      hasChildren={true}
+    >
+      {map(books, (book) => (
+        <BookListItem key={book.id} bookData={book} />
+      ))}
+    </StyledInfiniteScroll>
   </BookListWrapper>
 );
 

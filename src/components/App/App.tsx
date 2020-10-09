@@ -25,24 +25,40 @@ const App: React.FC = () => {
   const [title, setTitle] = useState<string>('');
   const [author, setAuthor] = useState<string>('');
   const [language, setLanguage] = useState<string>('');
-  const [year, setYear] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
   const [books, setBooks] = useState<Book[]>([]);
+  const [loadedPage, setLoadedPage] = useState<number>(0);
+  const [isMoreData, setIsMoreData] = useState<boolean>(true);
+
+  const incrementPageNumber = () => setLoadedPage((state) => state + 1);
+  const resetSearch = () => {
+    setTitle('');
+    setAuthor('');
+    setLanguage('');
+    setBooks([]);
+    setLoadedPage(0);
+    setIsMoreData(true);
+  };
 
   useEffect(() => {
-    if (title) fetchBooks(title, author, language, year, setBooks);
-  }, [title, author, language, year]);
+    if (title || author || language || category)
+      fetchBooks(title, author, language, category, loadedPage, setBooks, setIsMoreData);
+  }, [title, author, language, category, loadedPage]);
 
   return (
     <Layout>
       <StyledHeader>Book App</StyledHeader>
       <SearchForm
-        title={title}
+        resetSearch={resetSearch}
         setTitle={setTitle}
         setAuthor={setAuthor}
         setLanguage={setLanguage}
-        setYear={setYear}
+        setCategory={setCategory}
+        setBooks={setBooks}
+        setLoadedPage={setLoadedPage}
+        setIsMoreData={setIsMoreData}
       />
-      <BookList books={books} />
+      <BookList books={books} incrementPageNumber={incrementPageNumber} isMoreData={isMoreData} />
     </Layout>
   );
 };

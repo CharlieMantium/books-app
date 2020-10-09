@@ -9,6 +9,7 @@ export const createUrlResources = (
   language: string,
   category: string,
   loadedPage: number,
+  numberOfResults: number,
 ): string => {
   const titleSearchString = title.length ? `+intitle:${title.replace(/\s+/g, '+')}` : '';
   const authorSearchString = author.length ? `+inauthor:${author.replace(/\s+/g, '+')}` : '';
@@ -16,7 +17,7 @@ export const createUrlResources = (
   const categorySearchString = category.length ? `+subject:${category}` : '';
   const dataPageString = `&startIndex=${loadedPage * 10}`;
 
-  return `volumes?q=${titleSearchString}${categorySearchString}${authorSearchString}${languageSearchString}${dataPageString}&maxResults=10`;
+  return `volumes?q=${titleSearchString}${categorySearchString}${authorSearchString}${languageSearchString}${dataPageString}&maxResults=${numberOfResults}`;
 };
 
 export const filterOutDuplicateBooks = (currentBooks: Book[], newBooks: Book[]): Book[] => {

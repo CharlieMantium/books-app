@@ -13,7 +13,15 @@ export const fetchBooks = async (
   setIsMoreData: (isThereMoreData: boolean) => void,
 ): Promise<void> => {
   const urlEntryPoint = 'https://www.googleapis.com/books/v1/';
-  const urlResources = createUrlResources(title, author, language, category, loadedPage);
+  const numberOfResults = 10;
+  const urlResources = createUrlResources(
+    title,
+    author,
+    language,
+    category,
+    loadedPage,
+    numberOfResults,
+  );
   const url = `${urlEntryPoint}${urlResources}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -26,7 +34,7 @@ export const fetchBooks = async (
     title: book?.volumeInfo?.title,
   }));
 
-  if (mappedBooks.length) {
+  if (mappedBooks.length === numberOfResults) {
     setBooks((prevState) => [...prevState, ...filterOutDuplicateBooks(prevState, mappedBooks)]);
   } else setIsMoreData(false);
 };

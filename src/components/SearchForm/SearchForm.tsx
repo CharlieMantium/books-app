@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components/macro';
 import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
 import { Book } from '../../types/books';
+import { fetchBooks } from '../../helpers/fetch';
 
 import FormTextInput from '../FormTextInput/FormTextInput';
 
@@ -54,23 +55,23 @@ const StyledButton = styled.button`
 `;
 
 interface SearchFormProps {
-  setTitle: (title: string) => void;
-  setAuthor: (author: string) => void;
-  setLanguage: (language: string) => void;
-  setCategory: (category: string) => void;
-  setBooks: (books: Book[]) => void;
+  setBooks: (books: Book[] | { (prevState: Book[]): Book[] }) => void;
+  setIsMoreData: (isThereMoreData: boolean) => void;
+  loadedPage: number;
   setLoadedPage: (page: number) => void;
-  setIsMoreData: (isMoreDataToLoad: boolean) => void;
-  resetSearch: () => void;
 }
 
 const SearchForm: React.FC<SearchFormProps> = ({
-  resetSearch,
-  setTitle,
-  setAuthor,
-  setLanguage,
-  setCategory,
+  setBooks,
+  setIsMoreData,
+  loadedPage,
+  setLoadedPage,
 }) => {
+  const [title, setTitle] = useState<string>('');
+  const [author, setAuthor] = useState<string>('');
+  const [language, setLanguage] = useState<string>('');
+  const [category, setCategory] = useState<string>('');
+
   const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [titleInputValue, setTitleInputValue] = useState<string>('');
   const [authorInputValue, setAuthorInputValue] = useState<string>('');
@@ -78,6 +79,7 @@ const SearchForm: React.FC<SearchFormProps> = ({
   const [categoryInputValue, setCategoryInputValue] = useState<string>('');
 
   const onAdvancedSearchButtonClick = () => setIsAdvancedSearch((state) => !state);
+
   const handleTitleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setTitleInputValue(e.target.value);
   const handleAuthorInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -86,14 +88,36 @@ const SearchForm: React.FC<SearchFormProps> = ({
     setLanguageInputValue(e.target.value);
   const handleCategoryInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     setCategoryInputValue(e.target.value);
+
+  const resetSearch = () => {
+    setTitle('');
+    setAuthor('');
+    setLanguage('');
+    setBooks([]);
+    setLoadedPage(0);
+    setIsMoreData(true);
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    resetSearch();
-    setTitle(titleInputValue);
-    setAuthor(authorInputValue);
-    setLanguage(languageInputValue.toLowerCase());
-    setCategory(categoryInputValue);
+    if (
+      title !== titleInputValue ||
+      author !== authorInputValue ||
+      language !== languageInputValue.toLowerCase() ||
+      category !== categoryInputValue
+    ) {
+      resetSearch();
+      setTitle(titleInputValue);
+      setAuthor(authorInputValue);
+      setLanguage(languageInputValue.toLowerCase());
+      setCategory(categoryInputValue);
+    }
   };
+
+  useEffect(() => {
+    if (title || author || language || category)
+      fetchBooks(title, author, language, category, loadedPage, setBooks, setIsMoreData);
+  }, [title, author, language, category, loadedPage, setBooks, setIsMoreData]);
 
   return (
     <StyledForm onSubmit={handleSubmit}>

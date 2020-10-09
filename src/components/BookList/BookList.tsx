@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components/macro';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import map from 'lodash/map';
+import { rem } from 'polished';
 
 import { Book } from '../../types/books';
 
@@ -9,11 +10,8 @@ import BookListItem from '../BookListItem/BookListItem';
 import Loader from '../Loader/Loader';
 
 const BookListWrapper = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  align-items: stretch;
-  justify-content: space-between;
   width: 100%;
+
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -22,11 +20,14 @@ const BookListWrapper = styled.ul`
 const StyledInfiniteScroll = styled(InfiniteScroll)`
   display: flex;
   flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: space-between;
   width: 100%;
 `;
 
-const InfiniteScrollMessage = styled.p`
-  /* width: 100%; */
+const InfiniteScrollMessage = styled.li`
+  width: 100%;
+  height: ${rem(20)};
   text-align: center;
 `;
 

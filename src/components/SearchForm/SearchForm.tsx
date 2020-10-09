@@ -3,12 +3,12 @@ import styled from 'styled-components/macro';
 import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
-import { Book } from '../../types/books';
+import { Book } from '../../types/types';
 import { fetchBooks } from '../../helpers/fetch';
 
 import FormTextInput from '../FormTextInput/FormTextInput';
 
-const StyledForm = styled.form`
+const Form = styled.form`
   width: 100%;
   padding: 0;
 
@@ -17,17 +17,16 @@ const StyledForm = styled.form`
   }
 `;
 
-const StyledSearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
-  position: ${({ isVisible, isAdvancedPanel }) =>
-    !isVisible && isAdvancedPanel ? 'absolute' : 'static'};
+const SearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
+  position: ${({ isVisible, isAdvancedPanel }) => !isVisible && isAdvancedPanel && 'absolute'};
   top: ${({ isVisible, isAdvancedPanel }) => !isVisible && !isAdvancedPanel && `${rem(100)}`};
   z-index: ${({ isAdvancedPanel }) => isAdvancedPanel && '-1'};
   display: flex;
+  margin: 0;
   opacity: ${({ isVisible }) => (isVisible ? '1' : '0')};
+  border: none;
   transform: ${({ isVisible, isAdvancedPanel }) =>
     !isVisible && isAdvancedPanel && `translateY(-${rem(100)})`};
-  border: none;
-  margin: 0;
   transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
 `;
 
@@ -37,7 +36,7 @@ const ButtonWrapper = styled.div`
   margin-top: ${rem(10)};
 `;
 
-const StyledButton = styled.button`
+const Button = styled.button`
   padding: ${rem(1)} ${rem(10)};
   width: 40%;
   max-width: ${rem(100)};
@@ -67,12 +66,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
   loadedPage,
   setLoadedPage,
 }) => {
+  const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
+
   const [title, setTitle] = useState<string>('');
   const [author, setAuthor] = useState<string>('');
   const [language, setLanguage] = useState<string>('');
   const [category, setCategory] = useState<string>('');
 
-  const [isAdvancedSearch, setIsAdvancedSearch] = useState<boolean>(false);
   const [titleInputValue, setTitleInputValue] = useState<string>('');
   const [authorInputValue, setAuthorInputValue] = useState<string>('');
   const [languageInputValue, setLanguageInputValue] = useState<string>('');
@@ -120,8 +120,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
   }, [title, author, language, category, loadedPage, setBooks, setIsMoreData]);
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
-      <StyledSearchPanel isVisible={true} isAdvancedPanel={false}>
+    <Form onSubmit={handleSubmit}>
+      <SearchPanel isVisible={true} isAdvancedPanel={false}>
         <FormTextInput
           name="title"
           value={titleInputValue}
@@ -129,13 +129,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
           placeholder="Searched title"
         />
         <ButtonWrapper>
-          <StyledButton type="button" onClick={onAdvancedSearchButtonClick}>
+          <Button type="button" onClick={onAdvancedSearchButtonClick}>
             Advanced
-          </StyledButton>
-          <StyledButton type="submit">Search</StyledButton>
+          </Button>
+          <Button type="submit">Search</Button>
         </ButtonWrapper>
-      </StyledSearchPanel>
-      <StyledSearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
+      </SearchPanel>
+      <SearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
         <FormTextInput
           name="author"
           value={authorInputValue}
@@ -154,8 +154,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
           onChange={handleCategoryInputChange}
           placeholder="Searched category"
         />
-      </StyledSearchPanel>
-    </StyledForm>
+      </SearchPanel>
+    </Form>
   );
 };
 

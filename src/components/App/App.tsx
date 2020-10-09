@@ -3,13 +3,13 @@ import styled from 'styled-components/macro';
 import { rem } from 'polished';
 
 import { screenSizes } from '../../styles/base';
-import { Book } from '../../types/books';
+import { Book } from '../../types/types';
 
 import Layout from '../../styles/Layout/Layout';
 import SearchForm from '../SearchForm/SearchForm';
 import BookList from '../BookList/BookList';
 
-const StyledHeader = styled.h1`
+const Header = styled.h1`
   margin: ${rem(10)} 0;
   width: 100%;
   font-family: 'Great Vibes', cursive;
@@ -29,7 +29,7 @@ const App: React.FC = () => {
 
   return (
     <Layout>
-      <StyledHeader>Book App</StyledHeader>
+      <Header>Book App</Header>
       <SearchForm
         setBooks={setBooks}
         setIsMoreData={setIsMoreData}

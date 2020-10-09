@@ -4,7 +4,7 @@ import { rem, lighten } from 'polished';
 
 import { colors, screenSizes } from '../../styles/base';
 
-const StyledLabel = styled.label`
+const Label = styled.label`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -20,7 +20,7 @@ const InputName = styled.p`
   text-transform: capitalize;
 `;
 
-const StyledTextInput = styled.input`
+const TextInput = styled.input`
   padding: ${rem(1)} ${rem(10)};
   width: 70%;
   border: ${rem(2)} solid ${colors.beta};
@@ -42,10 +42,10 @@ interface FormTextInputProps {
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({ name, value, onChange, placeholder }) => (
-  <StyledLabel>
+  <Label>
     <InputName>{name}</InputName>
-    <StyledTextInput type="text" value={value} onChange={onChange} placeholder={placeholder} />
-  </StyledLabel>
+    <TextInput type="text" value={value} onChange={onChange} placeholder={placeholder} />
+  </Label>
 );
 
 export default FormTextInput;

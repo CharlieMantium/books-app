@@ -1,6 +1,6 @@
 import map from 'lodash/map';
 
-import { Book } from '../types/books';
+import { Book } from '../types/types';
 import { createUrlResources, filterOutDuplicateBooks } from './helpers';
 
 export const fetchBooks = async (
@@ -22,11 +22,8 @@ export const fetchBooks = async (
     loadedPage,
     numberOfResults,
   );
-  const url = `${urlEntryPoint}${urlResources}`;
-  const response = await fetch(url);
+  const response = await fetch(`${urlEntryPoint}${urlResources}`);
   const data = await response.json();
-  console.log(url);
-  console.log(data);
   const mappedBooks = map(data.items, (book) => ({
     cover: book?.volumeInfo?.imageLinks?.smallThumbnail,
     description: book?.searchInfo?.textSnippet,

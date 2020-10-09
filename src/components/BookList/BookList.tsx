@@ -4,14 +4,13 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import map from 'lodash/map';
 import { rem } from 'polished';
 
-import { Book } from '../../types/books';
+import { Book } from '../../types/types';
 
 import BookListItem from '../BookListItem/BookListItem';
 import Loader from '../Loader/Loader';
 
 const BookListWrapper = styled.ul`
   width: 100%;
-
   margin: 0;
   padding: 0;
   list-style-type: none;

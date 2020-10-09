@@ -1,7 +1,7 @@
 import includes from 'lodash/includes';
 import map from 'lodash/map';
 
-import { Book } from '../types/books';
+import { Book } from '../types/types';
 
 export const createUrlResources = (
   title: string,
@@ -22,5 +22,6 @@ export const createUrlResources = (
 
 export const filterOutDuplicateBooks = (currentBooks: Book[], newBooks: Book[]): Book[] => {
   const currentBooksID = map(currentBooks, (currentBook: Book) => currentBook.id);
+
   return newBooks.filter((newBook) => !includes(currentBooksID, newBook.id));
 };

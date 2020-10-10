@@ -8,6 +8,6 @@ describe("Loader", () => {
     const { queryByTestId } = render(
       <Loader />
     );
-    expect(queryByTestId("book-list-wrapper")).toBeTruthy();
+    expect(queryByTestId("loader-wrapper")).toBeTruthy();
   });
 });

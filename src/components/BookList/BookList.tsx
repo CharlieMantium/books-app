@@ -10,7 +10,6 @@ import BookListItem from '../BookListItem/BookListItem';
 import Loader from '../Loader/Loader';
 
 const BookListWrapper = styled.ul`
-  width: 100%;
   margin: 0;
   padding: 0;
   list-style-type: none;
@@ -21,7 +20,6 @@ const StyledInfiniteScroll = styled(InfiniteScroll)`
   flex-wrap: wrap;
   align-items: stretch;
   justify-content: space-between;
-  width: 100%;
 `;
 
 const InfiniteScrollMessage = styled.li`

@@ -30,27 +30,23 @@ const BookListItemContentWrapper = styled.div`
   @media (min-width: ${screenSizes.rotatedMobile}) {
     margin: ${rem(10)};
   }
-
-  @media (min-width: ${screenSizes.largeMobile}) {
-    padding: ${rem(10)};
-  }
-
-  @media (min-width: ${screenSizes.largeMobile}) {
-    padding: ${rem(20)};
-  }
 `;
 
 const BookTitle = styled.h2`
   margin: 0;
   text-align: center;
+  overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
   color: ${colors.gamma};
 `;
 
 const BookDescription = styled.p`
   margin: 0;
   text-align: center;
+  overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
 `;
 
 const CoverWrapper = styled.div`

@@ -27,7 +27,6 @@ const StyledWrapper = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${rem(20)};
-  width: 100%;
 
   @media (min-width: ${screenSizes.rotatedMobile}) {
     padding: ${rem(20)} ${rem(50)};

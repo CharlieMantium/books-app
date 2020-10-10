@@ -37,7 +37,7 @@ interface BookListProps {
 }
 
 const BookList: React.FC<BookListProps> = ({ books, incrementPageNumber, isMoreData }) => (
-  <BookListWrapper>
+  <BookListWrapper data-testid="book-list-wrapper">
     <StyledInfiniteScroll
       dataLength={books.length}
       next={incrementPageNumber}
@@ -47,7 +47,7 @@ const BookList: React.FC<BookListProps> = ({ books, incrementPageNumber, isMoreD
       hasChildren={true}
     >
       {map(books, (book) => (
-        <BookListItem key={book.id} bookData={book} />
+        <BookListItem key={book.id} bookData={book}/>
       ))}
     </StyledInfiniteScroll>
   </BookListWrapper>

@@ -42,9 +42,9 @@ interface FormTextInputProps {
 }
 
 const FormTextInput: React.FC<FormTextInputProps> = ({ name, value, onChange, placeholder }) => (
-  <Label>
-    <InputName>{name}</InputName>
-    <TextInput type="text" value={value} onChange={onChange} placeholder={placeholder} />
+  <Label data-testid="label">
+    <InputName data-testid="input-name-paragraph">{name}</InputName>
+    <TextInput type="text" value={value} onChange={onChange} placeholder={placeholder} data-testid="input"/>
   </Label>
 );
 

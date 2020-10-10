@@ -70,14 +70,14 @@ interface BookListItemProps {
 const BookListItem: React.FC<BookListItemProps> = ({ bookData }) => (
   <BookListItemWrapper>
     <BookListItemContentWrapper>
-      <BookTitle>{bookData.title}</BookTitle>
-      <CoverWrapper>
-        <StyledImg src={bookData.cover} alt={`"${bookData.title}" book cover`} />
+      <BookTitle data-testid="book-title">{bookData.title}</BookTitle>
+      <CoverWrapper data-testid="book-covert-wrapper-div">
+        <StyledImg src={bookData.cover} alt={`"${bookData.title}" book cover`} data-testid="book-cover-img"/>
       </CoverWrapper>
       {bookData.description ? (
-        <BookDescription dangerouslySetInnerHTML={{ __html: bookData.description }} />
+        <BookDescription dangerouslySetInnerHTML={{ __html: bookData.description }} data-testid="book-description-from-api"/>
       ) : (
-        <BookDescription>No description</BookDescription>
+        <BookDescription data-testid="book-description-replacement">No description</BookDescription>
       )}
     </BookListItemContentWrapper>
   </BookListItemWrapper>

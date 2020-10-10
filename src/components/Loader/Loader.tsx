@@ -12,7 +12,7 @@ const LoaderWrapper = styled.div`
 `;
 
 const LoaderComponent = () => (
-  <LoaderWrapper>
+  <LoaderWrapper data-testid="book-list-wrapper">
     <Loader type="Circles" color={colors.beta} height={80} width={80} />
   </LoaderWrapper>
 );

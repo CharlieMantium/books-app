@@ -19,7 +19,6 @@ const Form = styled.form`
 
 const SearchPanel = styled.fieldset<{ isVisible: boolean; isAdvancedPanel: boolean }>`
   position: ${({ isVisible, isAdvancedPanel }) => !isVisible && isAdvancedPanel && 'absolute'};
-  top: ${({ isVisible, isAdvancedPanel }) => !isVisible && !isAdvancedPanel && `${rem(100)}`};
   z-index: ${({ isAdvancedPanel }) => isAdvancedPanel && '-1'};
   display: flex;
   margin: 0;
@@ -120,8 +119,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
   }, [title, author, language, category, loadedPage, setBooks, setIsMoreData]);
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <SearchPanel isVisible={true} isAdvancedPanel={false}>
+    <Form onSubmit={handleSubmit} data-testid="form">
+      <SearchPanel isVisible={true} isAdvancedPanel={false} data-testid="regular-search-panel" >
         <FormTextInput
           name="title"
           value={titleInputValue}
@@ -129,13 +128,13 @@ const SearchForm: React.FC<SearchFormProps> = ({
           placeholder="Searched title"
         />
         <ButtonWrapper>
-          <Button type="button" onClick={onAdvancedSearchButtonClick}>
+          <Button type="button" onClick={onAdvancedSearchButtonClick} data-testid="advanced-search-button">
             Advanced
           </Button>
-          <Button type="submit">Search</Button>
+          <Button type="submit" data-testid="submit-button">Search</Button>
         </ButtonWrapper>
       </SearchPanel>
-      <SearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true}>
+      <SearchPanel isVisible={isAdvancedSearch} isAdvancedPanel={true} data-testid="advanced-search-panel">
         <FormTextInput
           name="author"
           value={authorInputValue}
